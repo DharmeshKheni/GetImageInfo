@@ -9,6 +9,7 @@
 import UIKit
 import MobileCoreServices
 import AssetsLibrary
+import CoreLocation
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
 
@@ -53,6 +54,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 assetLibrary.assetForURL(url,
                     resultBlock: { (asset) -> Void in
                         if let asset = asset {
+//                            println(asset.url)
+//                            println(asset.image)
+//                            println(asset.location)
                             let assetImage =  UIImage(CGImage:  asset.defaultRepresentation().fullResolutionImage().takeUnretainedValue())
                             print(assetImage)
                         }
@@ -66,5 +70,35 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
 
+}
+
+extension ALAsset {
+    var image: UIImage? {
+        if valueForKey(ALAssetPropertyType) as! String == ALAssetTypePhoto {
+            return UIImage(CGImage: defaultRepresentation().fullResolutionImage().takeUnretainedValue())
+        }
+        return nil
+    }
+    var durarion: NSNumber {
+        return valueForKey(ALAssetPropertyDuration) as? NSNumber ?? 0
+    }
+    var location: CLLocation? {
+        return valueForKey(ALAssetPropertyLocation) as? CLLocation
+    }
+    var orientation: NSNumber {
+        return valueForKey(ALAssetPropertyOrientation) as? NSNumber ?? 0
+    }
+    var date: NSDate? {
+        return valueForKey(ALAssetPropertyDate) as? NSDate
+    }
+    var type: String {
+        return valueForKey(ALAssetPropertyType) as? String ?? "unknown"
+    }
+    var url: NSURL? {
+        return valueForKey(ALAssetPropertyAssetURL) as? NSURL
+    }
+    var urls: NSDictionary? {
+        return valueForKey(ALAssetPropertyURLs) as? NSDictionary
+    }
 }
 
